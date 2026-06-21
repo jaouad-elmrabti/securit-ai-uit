@@ -144,32 +144,35 @@ Génère un rapport JSON avec cette structure EXACTE:
   }
 }`;
 
-  const response = await fetch("https://api.anthropic.com/v1/messages", {
+  const response = await fetch("/api/claude", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       model: "claude-sonnet-4-6",
-      max_tokens: 1000,
+      max_tokens: 4000,
       system: systemPrompt,
       messages: [{ role: "user", content: userPrompt }],
     }),
   });
 
-  if (!response.ok) throw new Error(`API Error: ${response.status}`);
+  if (!response.ok) {
+    const err = await response.json().catch(() => ({}));
+    throw new Error(err.error?.message || err.error || `API Error: ${response.status}`);
+  }
   const data = await response.json();
-  const text = data.content.map(i => i.text || "").join("");
+  const text = (data.content || []).map(i => i.text || "").join("");
   const clean = text.replace(/```json|```/g, "").trim();
   return JSON.parse(clean);
 }
 
 // ─── Training Dataset Generator ───────────────────────────────────────────────
 async function generateTrainingData(scenario) {
-  const response = await fetch("https://api.anthropic.com/v1/messages", {
+  const response = await fetch("/api/claude", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       model: "claude-sonnet-4-6",
-      max_tokens: 1000,
+      max_tokens: 1500,
       messages: [{
         role: "user",
         content: `Génère 3 exemples d'entraînement pour un modèle IA de détection de ${scenario} dans un contexte universitaire (UIT).
@@ -179,8 +182,13 @@ Format JSON UNIQUEMENT:
       }],
     }),
   });
+
+  if (!response.ok) {
+    const err = await response.json().catch(() => ({}));
+    throw new Error(err.error?.message || err.error || `API Error: ${response.status}`);
+  }
   const data = await response.json();
-  const text = data.content.map(i => i.text || "").join("");
+  const text = (data.content || []).map(i => i.text || "").join("");
   const clean = text.replace(/```json|```/g, "").trim();
   return JSON.parse(clean);
 }
