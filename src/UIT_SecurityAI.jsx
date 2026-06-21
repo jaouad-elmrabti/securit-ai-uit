@@ -91,8 +91,8 @@ const OWASP_CHECKS = [
 // ─── UIT Target Sites ────────────────────────────────────────────────────────
 const UIT_TARGETS = [
   { name: "Portail Principal UIT", url: "https://www.uit.ac.ma", type: "Site institutionnel" },
-  { name: "Portail Étudiant", url: "https://portail.uit.ac.ma", type: "Application académique" },
-  { name: "Plateforme E-Learning", url: "https://elearning.uit.ac.ma", type: "Plateforme pédagogique" },
+  { name: "Portail Étudiant", url: "https://dlc.uit.ac.ma", type: "Application académique" },
+  { name: "Plateforme E-Learning", url: "https://ent.uit.ac.ma", type: "Plateforme pédagogique" },
   { name: "Messagerie Institutionnelle", url: "https://mail.uit.ac.ma", type: "Service email" },
   { name: "Système de Gestion RH", url: "https://rh.uit.ac.ma", type: "Application RH" },
 ];
